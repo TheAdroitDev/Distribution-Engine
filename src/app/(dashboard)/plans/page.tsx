@@ -1,14 +1,13 @@
 
-import { auth } from "@/lib/auth/auth";
-import { headers } from "next/headers";
+import { getCachedSession } from "@/lib/auth/session";
 import Link from "next/link";
 import { format } from "date-fns";
 import { Card, CardHeader, CardTitle, CardContent, CardFooter } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
 import { getUserPlansWithCounts } from "@/features/distribution/queries";
+import { derivePlanStatus } from "@/features/content/lib/content-state";
 
 export default async function PlansHubPage() {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getCachedSession();
   if (!session?.user?.id) return null;
   const userId = session.user.id;
 
@@ -34,33 +33,32 @@ export default async function PlansHubPage() {
         <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
           {plans.map((plan) => {
             const strategyCount = plan.strategies.length;
-            const acceptedStrategies = plan.strategies.filter((s) => s.status === "ACCEPTED").length;
+            const acceptedStrategies = plan.strategies.filter((s) => s.status === "ACCEPTED" || s.status === "COMPLETED").length;
             
             const assets = plan.strategies.flatMap((s) => s.assets);
             const readyAssetsCount = assets.filter((a) => a.status === "READY").length;
             
-            const queueItems = plan.strategies.flatMap((s) => s.queueItems);
-            const pendingQueueCount = queueItems.filter((q) => q.status === "PENDING" || q.status === "IN_PROGRESS").length;
+            const derivedStatus = derivePlanStatus(plan);
 
             return (
-              <Card key={plan.id} className="flex flex-col">
+              <Card key={plan.id} className="flex flex-col transition-all hover:border-border/80 animate-morph-in">
                 <CardHeader className="pb-3">
                   <div className="flex items-start justify-between gap-4">
                     <CardTitle className="text-lg line-clamp-2" title={plan.source.title}>
                       {plan.source.title}
                     </CardTitle>
                     <span
-                      className={`text-xs font-bold px-2 py-1 rounded-md border shrink-0 ${
-                        plan.status === "COMPLETED"
-                          ? "bg-green-100 text-green-800 border-green-200"
-                          : plan.status === "IN_PROGRESS"
-                          ? "bg-blue-100 text-blue-800 border-blue-200"
-                          : plan.status === "RECOMMENDED"
-                          ? "bg-purple-100 text-purple-800 border-purple-200"
-                          : "bg-gray-100 text-gray-800 border-gray-200"
+                      className={`text-xs font-semibold px-2.5 py-0.5 rounded-full border shrink-0 transition-colors ${
+                        derivedStatus === "COMPLETED"
+                          ? "bg-emerald-500/10 text-emerald-700 dark:text-emerald-400 border-emerald-500/20"
+                          : derivedStatus === "IN_PROGRESS"
+                          ? "bg-blue-500/10 text-blue-700 dark:text-blue-400 border-blue-500/20"
+                          : derivedStatus === "RECOMMENDED"
+                          ? "bg-purple-500/10 text-purple-700 dark:text-purple-400 border-purple-500/20"
+                          : "bg-muted text-muted-foreground border-border"
                       }`}
                     >
-                      {plan.status.replace("_", " ")}
+                      {derivedStatus.replace("_", " ")}
                     </span>
                   </div>
                   <div className="text-xs text-muted-foreground mt-2">
@@ -80,13 +78,8 @@ export default async function PlansHubPage() {
                       <span className="text-xs text-muted-foreground ml-1">({acceptedStrategies} accepted)</span>
                     </div>
                     <div className="bg-muted/50 p-2 rounded-md border">
-                      <span className="block text-xs text-muted-foreground mb-1">READY Assets</span>
+                      <span className="block text-xs text-muted-foreground mb-1">Ready Assets</span>
                       <span className="font-semibold">{readyAssetsCount}</span>
-                    </div>
-                    <div className="bg-muted/50 p-2 rounded-md border col-span-2">
-                      <span className="block text-xs text-muted-foreground mb-1">Active Queue</span>
-                      <span className="font-semibold">{pendingQueueCount}</span>
-                      <span className="text-xs text-muted-foreground ml-1">items waiting/in-progress</span>
                     </div>
                   </div>
                 </CardContent>
