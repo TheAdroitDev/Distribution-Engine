@@ -1,36 +1,63 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Distribution Engine
+Not your ordinary content repuropser
+
+---
+
+An intelligent, multi-platform content distribution engine that ingests core source material, extracts analytical intelligence using Google Gemini, synthesizes cross-platform distribution strategies with deterministic diversity re-ranking, manages content asset preparation, and tracks execution outcomes.
+
+## Tech Stack
+
+- **Framework**: [Next.js 16](https://nextjs.org/) (App Router, Turbopack, React Compiler)
+- **UI & Styling**: React 19, [Tailwind CSS v4](https://tailwindcss.com/), Base UI, Phosphor Icons, Lucide, MorphIcons
+- **Authentication**: [Better Auth](https://www.better-auth.com/) (Google & GitHub OAuth, session caching)
+- **Database & ORM**: PostgreSQL via [Drizzle ORM](https://orm.drizzle.team/)
+- **AI Intelligence**: [Google Gemini 2.5](https://ai.google.dev/) via `@google/genai`
+- **Testing**: [Vitest](https://vitest.dev/) with JSDOM and Testing Library
 
 ## Getting Started
 
-First, run the development server:
+### 1. Environment Setup
+
+Copy `.env.example` to `.env` and fill in your database and API credentials:
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+cp .env.example .env
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+### 2. Install Dependencies
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+```bash
+pnpm install
+```
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+### 3. Database Schema
 
-## Learn More
+Generate and push database schemas:
 
-To learn more about Next.js, take a look at the following resources:
+```bash
+pnpm db:push
+```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+### 4. Run Development Server
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```bash
+pnpm dev
+```
 
-## Deploy on Vercel
+Open [http://localhost:3000](http://localhost:3000) to view the dashboard.
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Verification & Quality Commands
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+- **Unit & Integration Tests**: `pnpm test`
+- **TypeScript Typecheck**: `pnpm tsc --noEmit`
+- **ESLint**: `pnpm lint`
+- **Production Build**: `pnpm build`
+
+## Architecture & Workflows
+
+1. **Content Ingestion**: Ingest core source material (articles, memos, transcripts, notes).
+2. **Content Intelligence**: AI-powered extraction of key themes, core ideas, target angles, and technical concepts.
+3. **Distribution Planning**: Multi-platform strategy generation across 7 platforms (X, LinkedIn, Substack, YouTube, Reddit, Dev.to, Hacker News) with algorithmic candidate scoring and diversity re-ranking.
+4. **Asset Workspace**: Per-strategy asset drafting, live character counting, markdown preview, and status progression.
+5. **Execution Queue**: Prioritized queue management (`PENDING`, `IN_PROGRESS`, `COMPLETED`, `SKIPPED`).
+6. **Outcomes & Analytics**: Tracking execution observations, metrics, and quantitative outcome history.
