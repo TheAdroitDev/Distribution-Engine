@@ -7,12 +7,14 @@ import { AudienceForm } from "@/features/profile/components/AudienceForm";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 
-export default async function EditAudiencePage({ params }: { params: { id: string } }) {
+export default async function EditAudiencePage({ params }: { params: Promise<{ id: string }> }) {
   const session = await auth.api.getSession({ headers: await headers() });
   if (!session?.user?.id) return null;
 
+  const { id } = await params;
+
   const audience = await db.query.audiences.findFirst({
-    where: and(eq(audiences.id, params.id), eq(audiences.userId, session.user.id))
+    where: and(eq(audiences.id, id), eq(audiences.userId, session.user.id))
   });
 
   if (!audience) return notFound();
