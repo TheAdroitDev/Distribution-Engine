@@ -1,8 +1,7 @@
 import { db } from "@/lib/db";
-import { distributionStrategies, distributionAssets, distributionPlans } from "@/lib/db/schema";
-import { eq, and, desc } from "drizzle-orm";
-import { auth } from "@/lib/auth/auth";
-import { headers } from "next/headers";
+import { distributionStrategies } from "@/lib/db/schema";
+import { eq } from "drizzle-orm";
+import { getCachedSession } from "@/lib/auth/session";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import { AssetEditor } from "@/features/assets/components/AssetEditor";
@@ -11,38 +10,34 @@ import type { DistributionAsset } from "@/features/assets/schemas/asset-schema";
 
 export default async function DistributionAssetPage({ params }: { params: Promise<{ id: string; strategyId: string }> }) {
   const resolvedParams = await params;
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getCachedSession();
   if (!session?.user?.id) return null;
 
+  // Query strategy directly by ID with relational plan verification and active assets in 1 query
   const strategy = await db.query.distributionStrategies.findFirst({
-    where: and(
-      eq(distributionStrategies.id, resolvedParams.strategyId),
-      eq(distributionStrategies.planId, (await db.query.distributionPlans.findFirst({
-          where: and(
-              eq(distributionPlans.contentSourceId, resolvedParams.id),
-              eq(distributionPlans.userId, session.user.id)
-          )
-      }))?.id || "")
-    ),
+    where: eq(distributionStrategies.id, resolvedParams.strategyId),
     with: {
       plan: true,
       idea: true,
       audience: true,
-    }
+      assets: {
+        where: (assets, { eq: eqAsset }) => eqAsset(assets.userId, session.user.id),
+        orderBy: (assets, { desc: descAsset }) => [descAsset(assets.createdAt)],
+      },
+    },
   });
 
-  if (!strategy || strategy.plan.userId !== session.user.id) return notFound();
+  // Verify ownership and ensure this strategy belongs to the requested content source
+  if (
+    !strategy ||
+    strategy.plan.userId !== session.user.id ||
+    strategy.plan.contentSourceId !== resolvedParams.id
+  ) {
+    return notFound();
+  }
 
-  // Find the active asset (DRAFT or READY) for this strategy
-  const activeAssets = await db.query.distributionAssets.findMany({
-    where: and(
-      eq(distributionAssets.strategyId, strategy.id),
-      eq(distributionAssets.userId, session.user.id)
-    ),
-    orderBy: [desc(distributionAssets.createdAt)],
-  });
-  
-  // Exclude archived unless it's the only thing there
+  // Find active asset (READY or DRAFT), excluding archived
+  const activeAssets = strategy.assets || [];
   const assetRecord = activeAssets.find(a => a.status !== 'ARCHIVED') || undefined;
 
   const platform = PLATFORMS[strategy.platformId as keyof typeof PLATFORMS];
@@ -54,10 +49,10 @@ export default async function DistributionAssetPage({ params }: { params: Promis
   } as DistributionAsset : undefined;
 
   return (
-    <div className="max-w-4xl space-y-6">
+    <div className="max-w-4xl mx-auto space-y-6">
       <div className="flex items-center gap-2">
-        <Link href={`/content/${resolvedParams.id}/distribution`} className="text-muted-foreground hover:text-foreground">
-          &larr; Back to Distribution Plan
+        <Link href={`/content/${resolvedParams.id}/distribution`} className="text-sm font-medium text-muted-foreground hover:text-foreground">
+          &larr; Back to Strategies
         </Link>
       </div>
 
