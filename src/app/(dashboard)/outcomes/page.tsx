@@ -1,15 +1,14 @@
 import { db } from "@/lib/db";
 import { distributionQueueItems, distributionOutcomes } from "@/lib/db/schema";
 import { eq, and, asc, desc } from "drizzle-orm";
-import { auth } from "@/lib/auth/auth";
-import { headers } from "next/headers";
+import { getCachedSession } from "@/lib/auth/session";
 import Link from "next/link";
 import { Card, CardHeader, CardTitle, CardContent } from "@/components/ui/card";
 import { PLATFORMS } from "@/features/platforms/definitions";
 import { format } from "date-fns";
 
 export default async function OutcomesPage() {
-  const session = await auth.api.getSession({ headers: await headers() });
+  const session = await getCachedSession();
   if (!session?.user?.id) return null;
   const userId = session.user.id;
 
@@ -37,19 +36,19 @@ export default async function OutcomesPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-3xl font-bold tracking-tight">Outcomes</h1>
-        <p className="text-muted-foreground mt-1">
-          Track what happened after you executed your distribution strategies.
+        <h1 className="text-3xl font-bold tracking-tight">Results & Performance</h1>
+        <p className="text-muted-foreground mt-1 text-sm">
+          Track real-world performance, audience response, and learnings from executed distributions.
         </p>
       </div>
 
       {completedItems.length === 0 ? (
         <div className="text-center py-12 border rounded-lg bg-muted/20">
           <p className="text-muted-foreground mb-4">
-            Outcomes are optional. Record one after executing a queued action.
+            No executed distributions found yet. Complete an item in your queue to track results.
           </p>
           <Link href="/queue" className="text-sm text-primary hover:underline font-medium">
-            Go to Queue &rarr;
+            Go to Execution Queue &rarr;
           </Link>
         </div>
       ) : (
@@ -65,7 +64,7 @@ export default async function OutcomesPage() {
                 <CardHeader className="pb-3">
                   <div className="flex items-center justify-between">
                     <CardTitle className="text-lg">
-                      {platformName} &mdash; {item.strategy.formatId}
+                      {platformName} - {item.strategy.formatId}
                     </CardTitle>
                     <span className="text-xs font-semibold bg-green-100 text-green-800 px-2 py-1 rounded-md border border-green-200">
                       {outcomeCount} observation{outcomeCount !== 1 ? "s" : ""}
