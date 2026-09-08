@@ -6,6 +6,7 @@ import { Toaster } from "@/components/ui/toast";
 import { PostHogProvider } from "@/components/PostHogProvider";
 import { PostHogPageView } from "@/components/PostHogPageView";
 import { Suspense } from "react";
+import Script from "next/script";
 import "./globals.css";
 
 const inter = Inter({
@@ -34,14 +35,13 @@ export default function RootLayout({
       className={`${inter.variable} ${geistMono.variable} h-full antialiased scroll-smooth`}
       suppressHydrationWarning
     >
-      <head>
-        <script
+      <body className="min-h-full flex flex-col" suppressHydrationWarning>
+        <Script
           defer
           src="https://cloud.umami.is/script.js"
-          data-website-id="5195c9d6-3b92-452a-a4af-57bf1e2f088d"
+          data-website-id={process.env.NEXT_PUBLIC_UMAMI_WEBSITE_ID || "5195c9d6-3b92-452a-a4af-57bf1e2f088d"}
+          strategy="afterInteractive"
         />
-      </head>
-      <body className="min-h-full flex flex-col" suppressHydrationWarning>
         <PostHogProvider>
           <ThemeProvider
             attribute="class"
