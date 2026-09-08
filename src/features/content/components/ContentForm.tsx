@@ -97,7 +97,7 @@ export function ContentForm({
         <Label htmlFor="title">Title</Label>
         <Input 
           id="title" 
-          placeholder="Why I chose Vertical Slice Architecture..." 
+          placeholder="Eg: Why I chose Vertical Slice Architecture..." 
           {...register("title")} 
         />
         {errors.title && <p className="text-sm text-destructive">{errors.title.message}</p>}
