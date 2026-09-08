@@ -280,7 +280,7 @@ export function LandingPageClient({ user }: LandingPageClientProps) {
 
                     {/* Subtitle */}
                     <p className="text-base sm:text-lg lg:text-xl text-muted-foreground max-w-2xl mx-auto leading-relaxed animate-in fade-in slide-in-from-top-5 duration-700">
-                        Turn your opinions into high-engagement platform-native posts. Reach the right people with content that sounds like you.
+                        Turn your opinions into high-engagement platform-native posts. Distribution Engine helps turn one product or update into a repeatable distribution workflow.
                     </p>
 
                     {/* Dual CTAs */}
