@@ -38,6 +38,7 @@ import {
     FileText
 } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { LayoutTextFlip } from "../ui/layout-text-flip";
 
 interface LandingPageClientProps {
     user: {
@@ -270,11 +271,11 @@ export function LandingPageClient({ user }: LandingPageClientProps) {
                 <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-8 relative z-10">
 
                     {/* Main Headline */}
-                    <h1 className="text-4xl sm:text-6xl lg:text-7xl font-extrabold tracking-tight text-foreground leading-[1.08] max-w-4xl mx-auto animate-in fade-in slide-in-from-top-4 duration-700">
+                    <h1 className="text-3xl sm:text-5xl lg:text-6xl font-extrabold tracking-tight text-foreground leading-[1.18] max-w-4xl mx-auto animate-in fade-in slide-in-from-top-4 duration-700">
                         Automate your technical content{" "}
-                        <span className="bg-gradient-to-r from-emerald-500 via-teal-400 to-cyan-500 bg-clip-text text-transparent">
-                            distribution pipeline.
-                        </span>
+                        <LayoutTextFlip
+                            words={["distribution pipeline", "multi-platform dispatch", "content fanout", "execution queue"]}
+                        />
                     </h1>
 
                     {/* Subtitle */}
