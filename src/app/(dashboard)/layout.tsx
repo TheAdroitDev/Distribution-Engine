@@ -3,6 +3,7 @@ import { Header } from "@/components/layout/Header";
 import { SidebarProvider, SidebarInset } from "@/components/ui/sidebar";
 import { getCachedSession } from "@/lib/auth/session";
 import { redirect } from "next/navigation";
+import { PostHogIdentifier } from "@/components/PostHogIdentifier";
 
 export default async function DashboardLayout({
   children,
@@ -17,6 +18,7 @@ export default async function DashboardLayout({
 
   return (
     <SidebarProvider>
+      <PostHogIdentifier user={session.user} />
       <Sidebar initialUser={session.user} />
       <SidebarInset className="flex flex-col h-screen overflow-hidden">
         <Header />

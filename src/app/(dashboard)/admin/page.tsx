@@ -71,6 +71,66 @@ export default async function AdminPage() {
         </div>
       </div>
 
+      {/* PostHog Analytics Integration Hub */}
+      <div className="rounded-2xl border border-border/80 bg-gradient-to-r from-violet-500/10 via-purple-500/5 to-transparent p-5 shadow-xs">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3.5">
+            <div className="flex size-11 items-center justify-center rounded-xl bg-violet-500/10 text-violet-600 dark:text-violet-400 border border-violet-500/20 text-xl font-bold shrink-0">
+              🦔
+            </div>
+            <div>
+              <div className="flex items-center gap-2">
+                <h2 className="text-base font-bold text-foreground">PostHog Analytics</h2>
+                <Badge variant="outline" className="text-[10px] font-bold text-emerald-600 dark:text-emerald-400 border-emerald-500/30 bg-emerald-500/10">
+                  Active &middot; Proxy Ingest Enabled
+                </Badge>
+              </div>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Live pageviews, user sessions, and retention analytics are aggregated in your PostHog cloud console.
+              </p>
+            </div>
+          </div>
+          <div className="flex flex-wrap items-center gap-2 shrink-0">
+            <a
+              href="https://us.posthog.com/web"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border/80 bg-card text-xs font-semibold text-foreground hover:bg-muted transition-colors shadow-xs"
+            >
+              <span>Web Analytics</span>
+              <ArrowUpRight className="size-3.5 text-muted-foreground" />
+            </a>
+            <a
+              href="https://us.posthog.com/events"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border/80 bg-card text-xs font-semibold text-foreground hover:bg-muted transition-colors shadow-xs"
+            >
+              <span>Live Events</span>
+              <ArrowUpRight className="size-3.5 text-muted-foreground" />
+            </a>
+            <a
+              href="https://us.posthog.com/replay"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-lg border border-border/80 bg-card text-xs font-semibold text-foreground hover:bg-muted transition-colors shadow-xs"
+            >
+              <span>Session Replay</span>
+              <ArrowUpRight className="size-3.5 text-muted-foreground" />
+            </a>
+            <a
+              href="https://us.posthog.com"
+              target="_blank"
+              rel="noreferrer"
+              className="inline-flex items-center gap-1.5 px-3.5 py-1.5 rounded-lg bg-primary text-primary-foreground text-xs font-semibold hover:bg-primary/90 transition-colors shadow-xs"
+            >
+              <span>Open PostHog Console</span>
+              <ArrowUpRight className="size-3.5" />
+            </a>
+          </div>
+        </div>
+      </div>
+
       {/* Top Hero KPI Metrics Grid */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-6 gap-3.5">
         {/* Total Users */}
