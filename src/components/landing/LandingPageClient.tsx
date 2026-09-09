@@ -156,7 +156,64 @@ export function LandingPageClient({ user }: LandingPageClientProps) {
     }, [resolvedTheme, setTheme]);
 
     return (
-        <div className="relative min-h-screen bg-background text-foreground selection:bg-primary/20 selection:text-primary font-sans antialiased overflow-x-clip">
+        <div className="relative min-h-screen w-full bg-background text-foreground selection:bg-primary/20 selection:text-primary font-sans antialiased overflow-x-clip">
+            {/* Pearl Mist Background with Top Glow (Dark Mode Only) */}
+            <div
+                className="hidden dark:block pointer-events-none absolute inset-x-0 top-0 h-[1000px] sm:h-[1250px] z-0"
+                style={{
+                    background: "radial-gradient(ellipse 80% 60% at 50% 0%, rgba(226, 232, 240, 0.07), transparent 75%)",
+                }}
+            />
+
+            {/* Dashed Top Fade Grid */}
+            <div
+                className="pointer-events-none absolute inset-x-0 top-0 h-[1000px] sm:h-[1250px] z-0 opacity-60"
+                style={{
+                    backgroundImage: `
+                        linear-gradient(to right, var(--dashed-grid-color, #e7e5e4) 1px, transparent 1px),
+                        linear-gradient(to bottom, var(--dashed-grid-color, #e7e5e4) 1px, transparent 1px)
+                    `,
+                    backgroundSize: "20px 20px",
+                    backgroundPosition: "0 0, 0 0",
+                    maskImage: `
+                        repeating-linear-gradient(
+                            to right,
+                            black 0px,
+                            black 3px,
+                            transparent 3px,
+                            transparent 8px
+                        ),
+                        repeating-linear-gradient(
+                            to bottom,
+                            black 0px,
+                            black 3px,
+                            transparent 3px,
+                            transparent 8px
+                        ),
+                        radial-gradient(ellipse 70% 60% at 50% 0%, #000 60%, transparent 100%)
+                    `,
+                    WebkitMaskImage: `
+                        repeating-linear-gradient(
+                            to right,
+                            black 0px,
+                            black 3px,
+                            transparent 3px,
+                            transparent 8px
+                        ),
+                        repeating-linear-gradient(
+                            to bottom,
+                            black 0px,
+                            black 3px,
+                            transparent 3px,
+                            transparent 8px
+                        ),
+                        radial-gradient(ellipse 70% 60% at 50% 0%, #000 60%, transparent 100%)
+                    `,
+                    maskComposite: "intersect",
+                    WebkitMaskComposite: "source-in",
+                }}
+            />
+
             {/* Floating Header / Navbar */}
             <header className="sticky top-0 z-50 w-full bg-background/65 dark:bg-background/60 backdrop-blur-2xl backdrop-saturate-150 shadow-sm shadow-black/[0.03] dark:shadow-black/20 transition-all">
                 <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-16 flex items-center justify-between gap-4">
